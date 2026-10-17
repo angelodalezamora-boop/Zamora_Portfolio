@@ -1,8 +1,3 @@
-// Initialize Supabase Client
-const SUPABASE_URL = 'https://qeruyqzgmgwiothdkhrkx.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable__wKkxGXiPDeODjE-NbQ-yg_9TF0A...'; // replace with your full publishable key
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 /* ---- Edit this block to fill in the portfolio. Anything left empty shows a dashed "add" prompt. ---- */
 const P = {
 
@@ -37,7 +32,13 @@ const P = {
       repo: "https://github.com/angelodalezamora-boop/student-early-warnings.git", 
       docs: "https://github.com" 
     },
-    { title: "", summary: "", tech: "", repo: "", docs: "" },
+     {
+     title: "Campus Café Sales Database",
+     summary: "A normalized SQLite database with SQL analysis, charts and data interpretation, running live in the browser.",
+     tech: "SQLite, SQL, Python, JavaScript (sql.js)",
+     repo: "https://angelodalezamora-boop.github.io/Campus-Caf-Sales-Database/",
+     docs: "https://github.com/angelodalezamora-boop/Campus-Caf-Sales-Database"
+   },
     { title: "", summary: "", tech: "", repo: "", docs: "" }
   ],
 
