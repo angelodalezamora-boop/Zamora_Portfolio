@@ -492,3 +492,21 @@ footer::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px
 .cert:hover .go .ico { transform: translate(2px, -2px); }
 .cert.noimg { grid-template-rows: 1fr; }
 .cert.noimg .cthumb { display: none; }
+/* Profile Picture Avatar Styling */
+.avatar-wrap {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  padding: 2px;
+  background: var(--grad);
+  flex: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
