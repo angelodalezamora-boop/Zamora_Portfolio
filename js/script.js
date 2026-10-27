@@ -68,7 +68,13 @@ const P = {
     "I learned that a clear, specific prompt gets better results, and that AI is most useful as a tutor and reviewer rather than a replacement for my own thinking.",
     "AI sometimes gave outdated syntax, invented functions and insecure examples. Testing and reading the official documentation caught these."
   ],
-  interviews: { mock: false, technical: false, defense: false },
+  interviews: { mock: true, technical: true },
+  /* Mock interview video. Use ONE of:
+     - a local file:      "videos/mock-interview.mp4"  (put the file in a videos folder)
+     - a YouTube link:    "https://www.youtube.com/watch?v=XXXXXXXXXXX"
+     - a Google Drive link: "https://drive.google.com/file/d/FILE_ID/view?usp=sharing" (set sharing to "Anyone with the link") */
+  mockVideo: "https://drive.google.com/file/d/1l9K-WNrSCIiLRxuopYVeIjcIHJy06icb/view?usp=sharing",
+  mockVideoNote: "Mock interview conducted on 2026-10-17",
   plan: {
     skillsNow: "Python, Flask, SQL / SQLite, HTML / CSS, Git / GitHub, basic troubleshooting",
     improve: "JavaScript, database design, writing automated tests, secure coding",
@@ -109,7 +115,44 @@ const PROJECT_SPEC = [
   { tag: "Project 3 · Specialization", icon: "i-star", def: "Specialization project", reqs: ["Built in my chosen IT area", "Related to my career goal", "Shows my skills and interests"] }
 ];
 
-const DEFENSE = [["Introduction", "1–2 min", 2], ["Problem", "2 min", 2], ["Objectives", "1 min", 1], ["Proposed solution", "2 min", 2], ["Technology", "2 min", 2], ["System demonstration", "5–10 min", 10], ["Database / architecture", "3 min", 3], ["Problems encountered", "2 min", 2], ["Solutions", "2 min", 2], ["Future improvements", "1 min", 1], ["Questions and answers", "Panel", 0]];
+const TECHPREP = [
+  { area: "Programming", icon: "i-code",
+    concepts: ["Variables, data types, loops and functions", "Object-oriented programming: classes, inheritance, encapsulation", "Lists, dictionaries and when to use each", "Exception handling and reading a traceback"],
+    task: "Write a function that takes a list of grades and returns the students below 75.",
+    code: "def below_passing(students, passing=75):\n    # students is a dict: {\"Ana\": 82, \"Ben\": 70}\n    return [name for name, grade in students.items() if grade < passing]\n\nprint(below_passing({\"Ana\": 82, \"Ben\": 70, \"Cara\": 74}))\n# ['Ben', 'Cara']",
+    answer: "The function loops through each student and grade, keeps only the names whose grade is under the passing mark, and returns them as a list. Using a parameter for the passing grade means the rule can change without rewriting the function. This is the same idea as the risk flagging in Project 1.",
+    proof: "Project 1: risk-flagging logic in Python" },
+  { area: "Database", icon: "i-db",
+    concepts: ["Primary keys, foreign keys and relationships", "Normalization (1NF to 3NF)", "SELECT, JOIN, GROUP BY, and CRUD statements", "Why parameterized queries matter"],
+    task: "Write a JOIN query that lists each student with their risk level.",
+    code: "SELECT s.name, r.level\nFROM students s\nJOIN risk_levels r ON s.risk_id = r.id\nORDER BY r.level;",
+    answer: "The JOIN matches the foreign key in students (risk_id) to the primary key in risk_levels (id), so each student row is combined with its risk level. Keeping risk levels in their own table avoids repeating the same text in every student row, which is what normalization is for. (Table and column names should match my own schema.)",
+    proof: "Project 1 and Project 2: SQLite schemas and queries" },
+  { area: "Web development", icon: "i-globe",
+    concepts: ["Client, server and database flow of a request", "HTTP methods (GET, POST) and status codes (200, 404, 500)", "Flask routes, templates and sessions", "Responsive layout with CSS grid, flexbox and media queries"],
+    task: "Explain what happens from the moment a user submits a login form until the page loads.",
+    code: "",
+    answer: "1) The browser sends a POST request with the username and password to the Flask login route. 2) Flask reads the form data and validates it. 3) It queries the users table with a parameterized query. 4) It compares the submitted password against the stored hash. 5) If it matches, Flask saves the user in the session and redirects (302) to the dashboard; if not, it shows a generic error. 6) The browser sends a GET request for the dashboard, Flask checks the session, renders the template with data from the database and returns 200 OK.",
+    proof: "Project 1 and Project 3: Flask applications; this portfolio" },
+  { area: "Networking", icon: "i-network",
+    concepts: ["IP address, subnet mask, gateway and DNS", "TCP vs UDP", "What DHCP does and what a 169.254.x.x address means", "Ping, ipconfig and tracert for troubleshooting"],
+    task: "A PC has Wi-Fi but no internet. Walk through how I would find the cause.",
+    code: "ipconfig /all          # do I have a valid IP, gateway and DNS?\nping 192.168.1.1       # can I reach the router (gateway)?\nping 8.8.8.8           # can I reach the internet by IP?\nping google.com        # does DNS resolve names?\nipconfig /flushdns",
+    answer: "I work from the bottom up. First I check that Wi-Fi is on and the adapter is enabled. If ipconfig shows a 169.254.x.x address, the PC did not get an address from DHCP, so I renew it or check the router. If the gateway does not answer, the problem is the local connection or router. If 8.8.8.8 answers but google.com does not, the problem is DNS, so I flush the DNS cache and set DNS to 8.8.8.8. Testing one layer at a time finds the cause faster than guessing.",
+    proof: "Wi-Fi troubleshooting case" },
+  { area: "Cybersecurity", icon: "i-shield",
+    concepts: ["SQL injection and how parameterized queries stop it", "Password hashing vs encryption", "Least privilege and input validation", "Role-based access control"],
+    task: "Show unsafe and safe versions of a login query and explain the difference.",
+    code: "# UNSAFE: input is joined into the SQL string\ncur.execute(\"SELECT * FROM users WHERE name='\" + name + \"'\")\n\n# SAFE: the value is sent separately\ncur.execute(\"SELECT * FROM users WHERE name = ?\", (name,))",
+    answer: "In the unsafe version, input such as ' OR '1'='1 becomes part of the SQL command and can bypass the login. In the safe version, the database treats the value only as data, never as part of the command. I also hash stored passwords, validate input, show generic error messages and give the database account only the permissions it needs.",
+    proof: "SQL injection case study; role-based access in Project 3" },
+  { area: "Software engineering", icon: "i-branch",
+    concepts: ["SDLC and Agile (sprints, backlog)", "Git workflow: commit, branch, push, pull, merge", "Testing: unit tests vs manual tests (Pytest)", "Requirements, use cases and ERD basics"],
+    task: "Resolve a rejected git push and explain each command I used.",
+    code: "git status              # see my local changes\ngit remote -v           # confirm the remote URL\ngit pull --rebase       # bring in remote commits first\n# fix any conflict, then:\ngit add .\ngit rebase --continue\ngit push",
+    answer: "A push is rejected when the remote has commits I do not have. git status and git remote -v confirm my state and the right remote. git pull --rebase replays my commits on top of the remote ones. If there is a conflict I edit the files, git add them and run git rebase --continue. Then git push succeeds. The habit is to pull before I push.",
+    proof: "Git push troubleshooting case; Pytest in Project 3" }
+];
 const PROMPTS = ["What I knew about IT before entering BSIT", "The most important things I learned", "The project that taught me the most, and why", "The technical difficulty that challenged me most", "How my IT skills have changed", "The skills I still need to improve", "The kind of IT professional I want to become", "Why I am ready to begin my career in IT"];
 
 /* ---------- helpers ---------- */
@@ -230,9 +273,37 @@ const AIQ = ["What did AI help me accomplish?", "What did I personally verify?",
 $("aiqa").innerHTML = AIQ.map((q, i) => `<div><h4>${q}</h4><p>${val(P.aiAnswers[i], "Add your answer")}</p></div>`).join("");
 
 /* ---------- employability ---------- */
-const IV = [["mock", "Mock job interview"], ["technical", "Technical interview"], ["defense", "Project defense"]];
+const IV = [["mock", "Mock job interview"], ["technical", "Technical interview"]];
 $("interviews").innerHTML = IV.map(([k, n]) => `<div class="row"><strong>${n}</strong><span class="status ${P.interviews[k] ? "done" : ""}">${P.interviews[k] ? "Completed" : "Not yet completed"}</span></div>`).join("");
-$("defense").innerHTML = DEFENSE.map(([n, t, w]) => `<li><span>${n}</span><span class="bar">${w ? `<i style="--w:${w * 10}%"></i>` : ""}</span><span class="min">${t}</span></li>`).join("");
+
+/* mock interview video: local file, YouTube or Google Drive */
+function videoEmbed(url) {
+  if (!url) return "";
+  let m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+  if (m) return `<iframe src="https://www.youtube.com/embed/${m[1]}" title="Mock interview video" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`;
+  m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
+  if (m) return `<iframe src="https://drive.google.com/file/d/${m[1]}/preview" title="Mock interview video" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>`;
+  return `<video controls preload="metadata" playsinline src="${esc(url)}">Your browser does not support video playback.</video>`;
+}
+$("mockvideo").innerHTML = P.mockVideo
+  ? `<div class="vidbox">${videoEmbed(P.mockVideo)}</div>${P.mockVideoNote ? `<p class="note" style="margin-top:12px">${esc(P.mockVideoNote)}</p>` : ""}`
+  : `<div class="vidbox empty"><span>${ph("Add your mock interview video link in js/script.js (mockVideo)")}</span></div>`;
+
+/* technical interview preparation (Step 20) */
+/* technical interview preparation (Step 20) */
+$("techprep").innerHTML = TECHPREP.map(t => `
+  <article class="tp">
+    <h4>${ic(t.icon)}${esc(t.area)}</h4>
+    <span class="lbl">Concepts I can explain</span>
+    <ul>${t.concepts.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
+    <span class="lbl">Practice problem</span>
+    <p>${esc(t.task)}</p>
+    ${t.code || t.answer ? `<span class="lbl">My answer</span>` : ""}
+    ${t.code ? `<pre class="code"><code>${esc(t.code)}</code></pre>` : ""}
+    ${t.answer ? `<p class="ans">${esc(t.answer)}</p>` : ""}
+    <span class="lbl">Evidence</span>
+    <p class="ev">${esc(t.proof)}</p>
+  </article>`).join("");
 const PL = P.plan;
 $("plan").innerHTML = [["Target position", P.targetPosition, "Add target position"], ["Target IT field", P.fields.join(", "), "Add target field"], ["Current skills", PL.skillsNow, "Add current skills"], ["Skills to improve", PL.improve, "Add skills to improve"], ["Technologies to learn", PL.learn, "Add technologies"], ["Certifications to consider", PL.certs, "Add certifications"], ["6-month goal", PL.g6, "Add goal"], ["1-year goal", PL.g12, "Add goal"], ["3-year goal", PL.g36, "Add goal"]]
   .map(([l, v, t]) => `<div><span class="lbl">${l}</span>${val(v, t)}</div>`).join("");
@@ -427,14 +498,6 @@ if ("IntersectionObserver" in window) {
     entries.forEach(en => { if (en.isIntersecting) setActive(en.target.id); });
   }, { rootMargin: "-40% 0px -55% 0px" });
   document.querySelectorAll("header#home, main > section").forEach(s => io.observe(s));
-
-  const defense = $("defense");
-  const io2 = new IntersectionObserver(entries => {
-    if (entries.some(en => en.isIntersecting)) { defense.classList.add("go"); io2.disconnect(); }
-  }, { threshold: 0.3 });
-  io2.observe(defense);
-} else {
-  $("defense").classList.add("go");
 }
 
 /* ---------- scroll reveal ---------- */
