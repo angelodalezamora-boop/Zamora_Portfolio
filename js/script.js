@@ -29,22 +29,26 @@ const P = {
       title: "Student Early Warning System", 
       summary: "An automated early intervention dashboard designed to flag academic risk factors and monitor at-risk students.", 
       tech: "Python, Flask, SQLite, Gunicorn",
-      repo: "https://github.com/angelodalezamora-boop/student-early-warnings.git", 
-      docs: "https://github.com" 
+      repo: "https://github.com/angelodalezamora-boop/student-early-warnings",
+      docs: "https://github.com/angelodalezamora-boop/student-early-warnings#readme",
+      live: "https://student-early-warnings.onrender.com",   // replace with the exact URL Render shows for your service
+      demoLogin: "teacher / Teacher123!"
     },
      {
      title: "Campus Café Sales Database",
      summary: "A normalized SQLite database with SQL analysis, charts and data interpretation, running live in the browser.",
      tech: "SQLite, SQL, Python, JavaScript (sql.js)",
-     repo: "https://angelodalezamora-boop.github.io/Campus-Caf-Sales-Database/",
-     docs: "https://github.com/angelodalezamora-boop/Campus-Caf-Sales-Database"
+     repo: "https://github.com/angelodalezamora-boop/Campus-Caf-Sales-Database",
+     docs: "https://github.com/angelodalezamora-boop/Campus-Caf-Sales-Database#readme",
+     live: "https://angelodalezamora-boop.github.io/Campus-Caf-Sales-Database/"
    },
-    { 
-      title: "AI-Assisted HelpDesk System", 
-      summary: "A full-stack IT help desk application featuring intelligent ticket triage, automated workflow testing, and secure role-based access.", 
-      tech: "Python, Flask, SQLite, Bootstrap, Pytest", 
-      repo: "https://helpdesk-ai-gyrc.onrender.com", 
-      docs: "https://github.com/angelodalezamora-boop/helpdesk-ai" 
+    {
+      title: "AI-Assisted HelpDesk System",
+      summary: "A full-stack IT help desk application featuring intelligent ticket triage, automated workflow testing, and secure role-based access.",
+      tech: "Python, Flask, SQLite, Bootstrap, Pytest",
+      repo: "https://github.com/angelodalezamora-boop/helpdesk-ai",
+      docs: "https://github.com/angelodalezamora-boop/helpdesk-ai#readme",
+      live: "https://helpdesk-ai-gyrc.onrender.com"
     }
   
   ],
@@ -248,6 +252,8 @@ $("projectcards").innerHTML = PROJECT_SPEC.map((spec, i) => {
     <p>${p.summary ? esc(p.summary) : ph("Add a one-sentence summary of the problem this solves")}</p>
     <details class="req"><summary>Requirements <span>${spec.reqs.length}</span></summary><ul>${spec.reqs.map(r => `<li>${r}</li>`).join("")}</ul></details>
     <div class="tech"><b>Technologies</b>${val(p.tech, "Add technologies used")}</div>
+    ${p.live ? `<a class="btn primary sm live-btn" href="${esc(p.live)}" target="_blank" rel="noopener">${ic("i-ext")} Live demo</a>` : ""}
+    ${p.demoLogin ? `<p class="note demo-note">Demo login: <span class="mono">${esc(p.demoLogin)}</span><br>The free host sleeps when idle, so the first load can take up to a minute.</p>` : ""}
     <div class="proj-links">${plink(p.repo, "Source code", "i-github")}${plink(p.docs, "Documentation", "i-file")}</div></article>`;
 }).join("");
 
