@@ -31,7 +31,7 @@ const P = {
       tech: "Python, Flask, SQLite, Gunicorn",
       repo: "https://github.com/angelodalezamora-boop/student-early-warnings",
       docs: "https://github.com/angelodalezamora-boop/student-early-warnings#readme",
-      live: "https://student-early-warnings.onrender.com",   // replace with the exact URL Render shows for your service
+      live: " https://student-early-warnings-2.onrender.com",   // replace with the exact URL Render shows for your service
       demoLogin: "teacher / Teacher123!"
     },
      {
